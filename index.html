@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>DTECT — Passive radar for civilian airspace security</title>
+<meta name="description" content="DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own." />
+<meta name="author" content="DTECT" />
+
+<!-- EDIT ME: replace with your live origin once the domain is settled, e.g.
+     https://dtectsystems.eu or https://<user>.github.io/<repo>.
+     og:image in particular MUST be an absolute URL — LinkedIn, X and Slack
+     will not resolve a relative path, and the preview will render blank. -->
+<link rel="canonical" href="https://dtectsystems.eu/" />
+<meta property="og:url" content="https://dtectsystems.eu/" />
+<meta property="og:image" content="https://dtectsystems.eu/assets/og.jpg" />
+
+<meta property="og:site_name" content="DTECT" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="DTECT — Passive radar for civilian airspace security" />
+<meta property="og:description" content="DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="DTECT — Passive radar for civilian airspace security" />
+<meta name="twitter:description" content="DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own." />
+<meta name="twitter:image" content="https://dtectsystems.eu/assets/og.jpg" />
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta name="theme-color" content="#0A1628" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+<style>
+:root {
+  --background: #0A1628;
+  --foreground: #F2F5F8;
+  --card: #0E1D33;
+  --muted-foreground: #8FA1B8;
+  --accent: #E87329;
+  --accent-foreground: #0A1628;
+  --destructive: #F0674F;
+  --border: #1C2E48;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --shell: 1600px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { display: block; max-width: 100%; }
+::selection { background: var(--accent); color: var(--accent-foreground); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--shell);
+  padding-inline: 1.5rem;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.eyebrow--accent { color: var(--accent); }
+.section-label { margin-bottom: 2.5rem; }
+
+section + section { border-top: 1px solid var(--border); }
+.section-body { padding-block: 6rem; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 92vh;
+  overflow: hidden;
+}
+.hero__img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--background) 0%,
+    rgba(10, 22, 40, 0.8) 50%,
+    rgba(10, 22, 40, 0.3) 100%
+  );
+}
+.hero__content { position: relative; padding-top: 8rem; padding-bottom: 5rem; }
+
+h1 {
+  max-width: 16ch;
+  font-size: clamp(2.75rem, 9vw, 6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-top: 2rem;
+}
+.hero__lede {
+  margin-top: 2rem;
+  max-width: 62ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--muted-foreground);
+}
+
+/* ---------- Incidents ---------- */
+.incidents {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  list-style: none;
+  padding: 0;
+  margin-top: 2.5rem;
+}
+.incidents li { background: var(--background); padding: 2rem; }
+.incidents h3 {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.incidents p {
+  margin-top: 0.75rem;
+  max-width: 52ch;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--muted-foreground);
+}
+.sources {
+  margin-top: 2rem;
+  text-transform: none;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--muted-foreground) 80%, transparent);
+}
+
+/* ---------- Approach ---------- */
+.cols { display: grid; gap: 3rem; margin-top: 2.5rem; }
+.cols h3 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
+.cols p {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--muted-foreground);
+}
+.note {
+  margin-top: 3rem;
+  max-width: 70ch;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--muted-foreground) 80%, transparent);
+}
+
+/* ---------- Proof ---------- */
+.proof { display: grid; gap: 3rem; }
+.proof h2, .contact h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+.proof p { margin-top: 2rem; max-width: 54ch; line-height: 1.65; color: var(--muted-foreground); }
+.proof p + p {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: color-mix(in srgb, var(--muted-foreground) 80%, transparent);
+}
+.proof figure { align-self: center; margin: 0; }
+.proof img { width: 100%; border: 1px solid var(--border); }
+.proof figcaption { margin-top: 1rem; }
+
+/* ---------- Contact ---------- */
+.contact h2 { max-width: 18ch; }
+.contact p { margin-top: 2rem; max-width: 62ch; line-height: 1.65; color: var(--muted-foreground); }
+.actions { margin-top: 3rem; display: flex; flex-wrap: wrap; gap: 1rem; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn__arrow { transition: transform 0.15s; }
+.btn:hover .btn__arrow { transform: translateX(4px); }
+
+.btn--primary { background: var(--accent); color: var(--accent-foreground); }
+.btn--primary:hover { background: var(--foreground); color: var(--background); }
+.btn--primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn--primary:disabled:hover { background: var(--accent); color: var(--accent-foreground); }
+
+.btn--ghost { background: transparent; color: var(--foreground); border-color: var(--border); }
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- Footer ---------- */
+footer { border-top: 1px solid var(--border); }
+footer .shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block: 3rem;
+}
+.wordmark { font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.18em; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--foreground); }
+
+/* ---------- Dialog ---------- */
+dialog {
+  width: min(32rem, calc(100vw - 2rem));
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+dialog::backdrop { background: rgba(10, 22, 40, 0.8); }
+
+.dialog__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: 0;
+  color: var(--muted-foreground);
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+.dialog__close:hover { color: var(--foreground); }
+dialog h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-top: 0.75rem; }
+dialog > form + p, .dialog__intro { margin-top: 0.5rem; font-size: 0.875rem; color: var(--muted-foreground); }
+
+.form { margin-top: 1.5rem; display: grid; gap: 1rem; }
+.form-row { display: grid; gap: 1rem; }
+
+label.eyebrow { display: block; margin-bottom: 0.5rem; }
+.req { color: var(--accent); }
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  outline: none;
+  transition: border-color 0.15s;
+}
+textarea { resize: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--destructive); }
+::placeholder { color: color-mix(in srgb, var(--muted-foreground) 60%, transparent); }
+
+.error { margin-top: 0.375rem; font-size: 0.75rem; color: var(--destructive); }
+.error:empty { display: none; }
+
+.honeypot { position: absolute; left: -9999px; width: 0; height: 0; overflow: hidden; }
+
+.form__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+/* Post-submit fallback */
+.fallback { margin-top: 1.5rem; display: none; }
+.fallback[data-open="true"] { display: block; }
+.fallback h3 { font-size: 1rem; font-weight: 600; }
+.fallback p { margin-top: 0.5rem; font-size: 0.875rem; color: var(--muted-foreground); }
+.fallback textarea { margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.75rem; }
+.fallback__actions { margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 768px) {
+  .shell { padding-inline: 2.5rem; }
+  .section-body { padding-block: 8rem; }
+  .hero__content { padding-bottom: 7rem; }
+  .hero__lede { font-size: 1.125rem; }
+  .incidents { grid-template-columns: 1fr 1fr; }
+  .incidents li { padding: 2.5rem; }
+  .cols { grid-template-columns: repeat(3, 1fr); }
+  .proof { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr 1fr; }
+  footer .shell { flex-direction: row; align-items: center; justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 1 · Hero -->
+<section class="hero">
+  <img
+    class="hero__img"
+    src="assets/hero-broadcast.jpg"
+    alt="Terrestrial broadcast mast above civilian infrastructure at dusk"
+    fetchpriority="high"
+    decoding="async"
+  />
+  <div class="hero__scrim"></div>
+  <div class="shell hero__content">
+    <p class="eyebrow eyebrow--accent">DTECT</p>
+    <h1>Sensing the invisible.</h1>
+    <p class="hero__lede">
+      DTECT is building a distributed passive radar layer that detects aerial
+      objects using existing terrestrial broadcast signals — without
+      transmitting radar energy of its own.
+    </p>
+  </div>
+</section>
+
+<!-- 2 · The problem -->
+<section>
+  <div class="shell section-body">
+    <h2 class="eyebrow">The problem</h2>
+    <ul class="incidents">
+      <li>
+        <p class="eyebrow eyebrow--accent">Jan 2026</p>
+        <h3>Port and energy sites, Northern Europe</h3>
+        <p>Unidentified drones reported over port terminals and energy facilities, prompting police investigations.</p>
+      </li>
+      <li>
+        <p class="eyebrow eyebrow--accent">Nov 2025</p>
+        <h3>Brussels Airport, Belgium</h3>
+        <p>Drone sightings halted departures and arrivals; flights were diverted to neighbouring airports.</p>
+      </li>
+      <li>
+        <p class="eyebrow eyebrow--accent">Oct 2025</p>
+        <h3>Munich Airport, Germany</h3>
+        <p>Repeated drone sightings closed the airport on consecutive evenings, stranding thousands of passengers.</p>
+      </li>
+      <li>
+        <p class="eyebrow eyebrow--accent">Sep 2025</p>
+        <h3>Copenhagen Airport, Denmark</h3>
+        <p>Large drones over the airfield suspended all traffic for several hours.</p>
+      </li>
+    </ul>
+    <p class="eyebrow sources">
+      Sources: public statements from the operators concerned and
+      contemporaneous reporting by Reuters, AP and the BBC.
+    </p>
+  </div>
+</section>
+
+<!-- 3 · The approach -->
+<section>
+  <div class="shell section-body">
+    <h2 class="eyebrow">The approach</h2>
+    <div class="cols">
+      <div>
+        <h3>Broadcast signals as illuminator</h3>
+        <p>
+          Terrestrial television transmitters already flood the sky with
+          high-power signal, maintained continuously as national
+          infrastructure. DTECT detects the reflections of those signals from
+          objects moving through the coverage area.
+        </p>
+      </div>
+      <div>
+        <h3>No transmitter</h3>
+        <p>
+          DTECT only listens. There is no radar signal to license, approve or
+          site — which changes where and how densely detection can be deployed.
+        </p>
+      </div>
+      <div>
+        <h3>Distributed by design</h3>
+        <p>
+          The system is being built as a network of nodes rather than a single
+          large installation, so coverage can follow the shape of a site.
+        </p>
+      </div>
+    </div>
+    <p class="note">
+      DTECT is a complementary sensing layer alongside existing radar, RF and
+      optical surveillance. Designed for open integration, including interfaces
+      compatible with standards such as ASTERIX and SAPIENT.
+    </p>
+  </div>
+</section>
+
+<!-- 4 · Proof -->
+<section>
+  <div class="shell section-body proof">
+    <div>
+      <p class="eyebrow section-label">Proof</p>
+      <h2>Demonstrated in the field.</h2>
+      <p>
+        A single prototype DTECT receiver has detected and tracked a moving
+        helicopter in real time, using a terrestrial broadcast transmitter as
+        its only illuminator.
+      </p>
+      <p>
+        Multi-node localisation, height estimation and automated classification
+        are in development.
+      </p>
+    </div>
+    <figure>
+      <img
+        src="assets/range-doppler.jpg"
+        alt="Range-Doppler plot from a DTECT passive radar capture showing a moving helicopter return"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption class="eyebrow">Range-Doppler plot · prototype capture</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 5 · Contact -->
+<section>
+  <div class="shell section-body contact">
+    <p class="eyebrow section-label">Contact</p>
+    <h2>Working with early sites.</h2>
+    <p>
+      DTECT is running field validation with operators of civilian critical
+      infrastructure. If you are responsible for airspace security at a site
+      with a drone problem, we would like to hear about it.
+    </p>
+    <div class="actions">
+      <button type="button" class="btn btn--primary" data-open-enquiry="pilot">
+        Discuss a pilot
+        <span class="btn__arrow" aria-hidden="true">&rarr;</span>
+      </button>
+      <button type="button" class="btn btn--ghost" data-open-enquiry="briefing">
+        Request a technical briefing
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="shell">
+    <div class="wordmark">DTECT</div>
+    <a class="eyebrow" href="mailto:info@dtectsystems.eu">info@dtectsystems.eu</a>
+  </div>
+</footer>
+
+<!-- ---------- Enquiry dialog ---------- -->
+<dialog id="enquiry" aria-labelledby="enquiry-title">
+  <button type="button" class="dialog__close" data-close aria-label="Close">&times;</button>
+
+  <p class="eyebrow eyebrow--accent" id="enquiry-kicker">Request a technical briefing</p>
+  <h2 id="enquiry-title">Get in touch.</h2>
+  <p class="dialog__intro" id="enquiry-intro">
+    Technical briefings are handled directly by the DTECT team, under NDA on request.
+  </p>
+
+  <form class="form" id="enquiry-form" novalidate>
+    <!-- honeypot — hidden from real users, must stay empty -->
+    <div class="honeypot" aria-hidden="true">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <div>
+      <label class="eyebrow" for="f-name">Name <span class="req">*</span></label>
+      <input id="f-name" name="name" type="text" maxlength="120" autocomplete="name"
+             aria-describedby="e-name" />
+      <p class="error" id="e-name"></p>
+    </div>
+
+    <div>
+      <label class="eyebrow" for="f-organisation">Organisation <span class="req">*</span></label>
+      <input id="f-organisation" name="organisation" type="text" maxlength="160" autocomplete="organization"
+             aria-describedby="e-organisation" />
+      <p class="error" id="e-organisation"></p>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label class="eyebrow" for="f-email">Work email <span class="req">*</span></label>
+        <input id="f-email" name="email" type="email" maxlength="254" autocomplete="email"
+               aria-describedby="e-email" />
+        <p class="error" id="e-email"></p>
+      </div>
+      <div>
+        <label class="eyebrow" for="f-role"><span data-role-label>Role</span> <span class="req" data-pilot-only hidden>*</span></label>
+        <input id="f-role" name="role" type="text" maxlength="120" autocomplete="organization-title"
+               aria-describedby="e-role" />
+        <p class="error" id="e-role"></p>
+      </div>
+    </div>
+
+    <div class="form-row" data-pilot-only hidden>
+      <div>
+        <label class="eyebrow" for="f-siteType">Site type <span class="req">*</span></label>
+        <select id="f-siteType" name="siteType" aria-describedby="e-siteType">
+          <option value="" disabled selected>Select&hellip;</option>
+          <option>Airport</option>
+          <option>Port</option>
+          <option>Energy</option>
+          <option>Data centre</option>
+          <option>Other</option>
+        </select>
+        <p class="error" id="e-siteType"></p>
+      </div>
+      <div>
+        <label class="eyebrow" for="f-timeframe">Indicative timeframe <span class="req">*</span></label>
+        <select id="f-timeframe" name="timeframe" aria-describedby="e-timeframe">
+          <option value="" disabled selected>Select&hellip;</option>
+          <option>Exploratory</option>
+          <option>Within 6 months</option>
+          <option>6&ndash;12 months</option>
+          <option>12+ months</option>
+        </select>
+        <p class="error" id="e-timeframe"></p>
+      </div>
+    </div>
+
+    <div>
+      <label class="eyebrow" for="f-message"><span data-message-label>What you need to see</span> <span class="req">*</span></label>
+      <textarea id="f-message" name="message" rows="4" maxlength="2000"
+                aria-describedby="e-message"
+                placeholder="What you would like the briefing to cover."></textarea>
+      <p class="error" id="e-message"></p>
+    </div>
+
+    <div class="form__foot">
+      <p class="eyebrow">No marketing list. Handled under NDA on request.</p>
+      <button type="submit" class="btn btn--primary">
+        Send enquiry
+        <span class="btn__arrow" aria-hidden="true">&rarr;</span>
+      </button>
+    </div>
+  </form>
+
+  <div class="fallback" id="fallback" role="status">
+    <h3 id="fallback-title">Your email client should have opened.</h3>
+    <p id="fallback-note">
+      If nothing happened, copy the message below and send it to
+      <a class="link" href="mailto:info@dtectsystems.eu">info@dtectsystems.eu</a>.
+    </p>
+    <textarea id="fallback-text" rows="8" readonly aria-label="Your enquiry, ready to copy"></textarea>
+    <div class="fallback__actions">
+      <button type="button" class="btn btn--primary" id="copy-btn">Copy message</button>
+      <button type="button" class="btn btn--ghost" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  "use strict";
+
+  var RECIPIENT = "info@dtectsystems.eu";
+  // Mail clients and the Windows shell truncate long mailto: URLs. Past this
+  // budget we skip the navigation entirely and hand the user the copy panel,
+  // which is lossless.
+  var MAILTO_BUDGET = 1900;
+
+  var dialog = document.getElementById("enquiry");
+  var form = document.getElementById("enquiry-form");
+  var fallback = document.getElementById("fallback");
+  var fallbackTitle = document.getElementById("fallback-title");
+  var fallbackNote = document.getElementById("fallback-note");
+  var fallbackText = document.getElementById("fallback-text");
+  var copyBtn = document.getElementById("copy-btn");
+  var submitBtn = form.querySelector('button[type="submit"]');
+  var isPilot = false;
+
+  /* ---------- open / close ---------- */
+
+  function setVariant(variant) {
+    isPilot = variant === "pilot";
+
+    document.getElementById("enquiry-kicker").textContent =
+      isPilot ? "Discuss a pilot" : "Request a technical briefing";
+    document.getElementById("enquiry-title").textContent =
+      isPilot ? "Tell us about your site." : "Get in touch.";
+    document.getElementById("enquiry-intro").textContent = isPilot
+      ? "Pilot enquiries are reviewed by the DTECT team. A few details help us assess fit before we come back to you."
+      : "Technical briefings are handled directly by the DTECT team, under NDA on request.";
+
+    document.querySelector("[data-role-label]").textContent =
+      isPilot ? "Role and responsibility" : "Role";
+    document.querySelector("[data-message-label]").textContent =
+      isPilot ? "Nature of the current problem" : "What you need to see";
+    document.getElementById("f-message").placeholder = isPilot
+      ? "Current sensing coverage, gaps you're seeing, site constraints…"
+      : "What you would like the briefing to cover.";
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("[data-pilot-only]"),
+      function (el) { el.hidden = !isPilot; }
+    );
+  }
+
+  function resetDialog() {
+    form.reset();
+    clearErrors();
+    form.hidden = false;
+    fallback.dataset.open = "false";
+    submitBtn.disabled = false;
+  }
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("[data-open-enquiry]"),
+    function (btn) {
+      btn.addEventListener("click", function () {
+        setVariant(btn.dataset.openEnquiry);
+        resetDialog();
+        dialog.showModal();
+      });
+    }
+  );
+
+  Array.prototype.forEach.call(
+    dialog.querySelectorAll("[data-close]"),
+    function (btn) { btn.addEventListener("click", function () { dialog.close(); }); }
+  );
+
+  // Click on the backdrop (i.e. outside the dialog's own box) closes it.
+  dialog.addEventListener("click", function (event) {
+    if (event.target !== dialog) return;
+    var box = dialog.getBoundingClientRect();
+    var outside =
+      event.clientX < box.left || event.clientX > box.right ||
+      event.clientY < box.top || event.clientY > box.bottom;
+    if (outside) dialog.close();
+  });
+
+  /* ---------- validation ---------- */
+
+  var FIELDS = ["name", "organisation", "email", "role", "siteType", "timeframe", "message"];
+
+  function fieldEl(key) { return document.getElementById("f-" + key); }
+  function errorEl(key) { return document.getElementById("e-" + key); }
+
+  function clearErrors() {
+    FIELDS.forEach(function (key) {
+      errorEl(key).textContent = "";
+      fieldEl(key).removeAttribute("aria-invalid");
+    });
+  }
+
+  function showErrors(errors) {
+    clearErrors();
+    var first = null;
+    FIELDS.forEach(function (key) {
+      if (!errors[key]) return;
+      errorEl(key).textContent = errors[key];
+      fieldEl(key).setAttribute("aria-invalid", "true");
+      if (!first) first = fieldEl(key);
+    });
+    if (first) first.focus();
+  }
+
+  // Deliberately permissive — the mail client and a human both see this next.
+  // The job here is to catch typos, not to adjudicate RFC 5322.
+  function looksLikeEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+  }
+
+  function validate(values) {
+    var errors = {};
+
+    if (!values.name) errors.name = "Required";
+    if (!values.organisation) errors.organisation = "Required";
+
+    if (!values.email) errors.email = "Required";
+    else if (!looksLikeEmail(values.email)) errors.email = "Invalid email";
+
+    if (!values.message) errors.message = "Required";
+
+    if (isPilot) {
+      if (!values.role) errors.role = "Required";
+      if (!values.siteType) errors.siteType = "Required";
+      if (!values.timeframe) errors.timeframe = "Required";
+    }
+
+    return errors;
+  }
+
+  /* ---------- submit ---------- */
+
+  function readValues() {
+    var data = new FormData(form);
+    var values = {};
+    FIELDS.forEach(function (key) {
+      values[key] = String(data.get(key) || "").trim();
+    });
+    values.website = String(data.get("website") || "").trim();
+    return values;
+  }
+
+  function buildMessage(values) {
+    var lines = [
+      "Name: " + values.name,
+      "Organisation: " + values.organisation,
+      "Email: " + values.email
+    ];
+    if (values.role) lines.push("Role: " + values.role);
+    if (isPilot) {
+      if (values.siteType) lines.push("Site type: " + values.siteType);
+      if (values.timeframe) lines.push("Indicative timeframe: " + values.timeframe);
+    }
+    lines.push("", values.message);
+    return lines.join("\n");
+  }
+
+  function buildSubject(values) {
+    return (isPilot ? "Pilot enquiry from " : "Technical briefing request from ") +
+      values.name + " at " + values.organisation;
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    var values = readValues();
+
+    // Honeypot tripped — a bot filled a field no human can see. Pretend it worked.
+    if (values.website) { dialog.close(); return; }
+
+    var errors = validate(values);
+    if (Object.keys(errors).length > 0) { showErrors(errors); return; }
+    clearErrors();
+
+    var subject = buildSubject(values);
+    var body = buildMessage(values);
+    var mailto = "mailto:" + RECIPIENT +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+
+    // The panel is shown either way: navigating to a mailto: never throws and
+    // never reports failure, so there is no way to know whether a mail client
+    // actually picked it up.
+    fallbackText.value = "To: " + RECIPIENT + "\nSubject: " + subject + "\n\n" + body;
+    form.hidden = true;
+    fallback.dataset.open = "true";
+
+    if (mailto.length <= MAILTO_BUDGET) {
+      fallbackTitle.textContent = "Your email client should have opened.";
+      fallbackNote.innerHTML =
+        'If nothing happened, copy the message below and send it to ' +
+        '<a class="link" href="mailto:' + RECIPIENT + '">' + RECIPIENT + '</a>.';
+      window.location.href = mailto;
+    } else {
+      fallbackTitle.textContent = "Almost there — one copy and paste.";
+      fallbackNote.innerHTML =
+        'Your message is too long to hand to an email client automatically. ' +
+        'Copy it below and send it to ' +
+        '<a class="link" href="mailto:' + RECIPIENT + '">' + RECIPIENT + '</a>.';
+    }
+
+    copyBtn.focus();
+  });
+
+  /* ---------- copy ---------- */
+
+  copyBtn.addEventListener("click", function () {
+    function done() {
+      copyBtn.textContent = "Copied";
+      setTimeout(function () { copyBtn.textContent = "Copy message"; }, 2000);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(fallbackText.value).then(done, selectInstead);
+    } else {
+      selectInstead();
+    }
+
+    function selectInstead() {
+      fallbackText.focus();
+      fallbackText.select();
+      copyBtn.textContent = "Press ⌘/Ctrl+C";
+      setTimeout(function () { copyBtn.textContent = "Copy message"; }, 3000);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
