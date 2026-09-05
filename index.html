@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,10 +8,7 @@
 <meta name="description" content="DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own." />
 <meta name="author" content="DTECT" />
 
-<!-- EDIT ME: replace with your live origin once the domain is settled, e.g.
-     https://dtectsystems.eu or https://<user>.github.io/<repo>.
-     og:image in particular MUST be an absolute URL — LinkedIn, X and Slack
-     will not resolve a relative path, and the preview will render blank. -->
+<meta name="robots" content="index, follow, max-image-preview:large" />
 <link rel="canonical" href="https://dtectsystems.eu/" />
 <meta property="og:url" content="https://dtectsystems.eu/" />
 <meta property="og:image" content="https://dtectsystems.eu/assets/og.jpg" />
@@ -20,19 +17,73 @@
 <meta property="og:type" content="website" />
 <meta property="og:title" content="DTECT — Passive radar for civilian airspace security" />
 <meta property="og:description" content="DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own." />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="628" />
+<meta property="og:image:alt" content="Terrestrial broadcast mast above civilian infrastructure at dusk" />
+<meta property="og:locale" content="en_GB" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="DTECT — Passive radar for civilian airspace security" />
 <meta name="twitter:description" content="DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own." />
 <meta name="twitter:image" content="https://dtectsystems.eu/assets/og.jpg" />
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "DTECT",
+  "legalName": "DTECT ApS",
+  "alternateName": "DTECT ApS",
+  "url": "https://dtectsystems.eu/",
+  "logo": "https://dtectsystems.eu/assets/dtect-mark-navy.svg",
+  "image": "https://dtectsystems.eu/assets/og.jpg",
+  "email": "info@dtectsystems.eu",
+  "foundingDate": "2026",
+  "description": "DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own.",
+  "identifier": [
+    { "@type": "PropertyValue", "name": "CVR", "value": "46535952" }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "\u00d8stervang 16",
+    "postalCode": "2800",
+    "addressLocality": "Kongens Lyngby",
+    "addressCountry": "DK"
+  },
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "contactType": "sales",
+    "email": "info@dtectsystems.eu",
+    "availableLanguage": ["en", "da"]
+  }]
+}
+</script>
+
 <meta name="theme-color" content="#0A1628" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<!-- Self-hosted so first paint needs no third-party DNS + TLS round trip,
+     and no visitor IP reaches a third party. Both are variable fonts: one
+     file per family covers every weight used here. -->
+<link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin-var.woff2" as="font" type="font/woff2" crossorigin />
 
 <style>
+@font-face {
+  font-family: "Inter";
+  src: url("assets/fonts/inter-latin-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("assets/fonts/jetbrains-mono-latin-var.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #0A1628;
   --foreground: #F2F5F8;
@@ -129,6 +180,24 @@ h1 {
   font-size: 1rem;
   line-height: 1.65;
   color: var(--muted-foreground);
+}
+
+/* ---------- Problem ---------- */
+.problem-lede {
+  margin-top: 2rem;
+  max-width: 62ch;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--foreground);
+}
+.problem-lede strong { font-weight: 600; color: var(--accent); }
+.problem-sub {
+  margin-top: 3.5rem;
+  margin-bottom: -0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  max-width: 44ch;
 }
 
 /* ---------- Incidents ---------- */
@@ -236,6 +305,7 @@ footer .shell {
   gap: 1rem;
   padding-block: 3rem;
 }
+.legal { color: var(--muted-foreground); line-height: 1.6; }
 .wordmark { font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.18em; }
 footer a { text-decoration: none; }
 footer a:hover { color: var(--foreground); }
@@ -336,6 +406,36 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 </style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "DTECT",
+  "url": "https://dtectsystems.eu/",
+  "logo": "https://dtectsystems.eu/favicon.svg",
+  "image": "https://dtectsystems.eu/assets/og.jpg",
+  "email": "info@dtectsystems.eu",
+  "description": "DTECT is building a distributed passive radar layer that detects aerial objects using existing terrestrial broadcast signals, without transmitting radar energy of its own.",
+  "knowsAbout": [
+    "Passive radar",
+    "Passive coherent location",
+    "Drone detection",
+    "Counter-UAS",
+    "Airspace security",
+    "Critical infrastructure protection"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "sales",
+    "email": "info@dtectsystems.eu",
+    "availableLanguage": [
+      "en"
+    ]
+  }
+}
+</script>
+
 </head>
 
 <body>
@@ -345,6 +445,13 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
   <img
     class="hero__img"
     src="assets/hero-broadcast.jpg"
+    srcset="
+      assets/hero-broadcast-960.jpg   960w,
+      assets/hero-broadcast-1440.jpg 1440w,
+      assets/hero-broadcast.jpg      1920w"
+    sizes="100vw"
+    width="1920"
+    height="1088"
     alt="Terrestrial broadcast mast above civilian infrastructure at dusk"
     fetchpriority="high"
     decoding="async"
@@ -365,31 +472,76 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
 <section>
   <div class="shell section-body">
     <h2 class="eyebrow">The problem</h2>
+
+    <p class="problem-lede">
+      In 2025, unauthorised drones disrupted flight operations at
+      <strong>25 German commercial airports</strong> across
+      <strong>116 incidents</strong>. Direct losses to aviation came to around
+      <strong>&euro;60 million</strong>, rising to <strong>&euro;160 million</strong>
+      once knock-on effects across the network are counted.
+    </p>
+
+    <h3 class="problem-sub">
+      The drones that cause closures are the ones existing systems are least
+      able to see.
+    </h3>
+
+    <div class="cols">
+      <div>
+        <h3>RF detection</h3>
+        <p>
+          Reads the drone&rsquo;s control link, telemetry and Remote ID.
+          A drone flying a pre-programmed route with its transmitter off
+          emits nothing to read.
+        </p>
+      </div>
+      <div>
+        <h3>Active radar</h3>
+        <p>
+          Effective, but it transmits. Spectrum licensing, siting constraints
+          and cost put it beyond most civilian sites &mdash; and well beyond
+          the density a large perimeter needs.
+        </p>
+      </div>
+      <div>
+        <h3>Cameras and acoustics</h3>
+        <p>
+          Useful for identification once you know where to look. Limited by
+          weather, light and line of sight, and hard to scale across a
+          perimeter.
+        </p>
+      </div>
+    </div>
+
     <ul class="incidents">
-      <li>
-        <p class="eyebrow eyebrow--accent">Jan 2026</p>
-        <h3>Port and energy sites, Northern Europe</h3>
-        <p>Unidentified drones reported over port terminals and energy facilities, prompting police investigations.</p>
-      </li>
-      <li>
-        <p class="eyebrow eyebrow--accent">Nov 2025</p>
-        <h3>Brussels Airport, Belgium</h3>
-        <p>Drone sightings halted departures and arrivals; flights were diverted to neighbouring airports.</p>
-      </li>
       <li>
         <p class="eyebrow eyebrow--accent">Oct 2025</p>
         <h3>Munich Airport, Germany</h3>
-        <p>Repeated drone sightings closed the airport on consecutive evenings, stranding thousands of passengers.</p>
+        <p>
+          Repeated drone sightings closed the airport on consecutive evenings,
+          affecting thousands of passengers.
+        </p>
       </li>
       <li>
         <p class="eyebrow eyebrow--accent">Sep 2025</p>
         <h3>Copenhagen Airport, Denmark</h3>
-        <p>Large drones over the airfield suspended all traffic for several hours.</p>
+        <p>
+          Large drones over the airfield suspended all traffic for several
+          hours, with around fifteen flights diverted.
+        </p>
       </li>
     </ul>
+
+    <p class="note">
+      Large hubs absorb most of the diversions. Regional airports, ports and
+      energy sites have less capacity to absorb a closure and less reason to
+      expect a national-scale radar installation &mdash; which is where the gap
+      is widest.
+    </p>
+
     <p class="eyebrow sources">
-      Sources: public statements from the operators concerned and
-      contemporaneous reporting by Reuters, AP and the BBC.
+      Sources: German Aerospace Center (DLR) analysis of Federal Aviation
+      Office data, 2026; contemporaneous reporting on the incidents cited.
     </p>
   </div>
 </section>
@@ -450,6 +602,12 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
     <figure>
       <img
         src="assets/range-doppler.jpg"
+        srcset="
+          assets/range-doppler-800.jpg  800w,
+          assets/range-doppler.jpg     1536w"
+        sizes="(min-width: 1600px) 696px, (min-width: 768px) 45vw, calc(100vw - 3rem)"
+        width="1536"
+        height="1024"
         alt="Range-Doppler plot from a DTECT passive radar capture showing a moving helicopter return"
         loading="lazy"
         decoding="async"
@@ -485,6 +643,9 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
   <div class="shell">
     <div class="wordmark">DTECT</div>
     <a class="eyebrow" href="mailto:info@dtectsystems.eu">info@dtectsystems.eu</a>
+    <p class="eyebrow legal">
+      DTECT ApS &middot; CVR 46535952 &middot; Østervang 16, 2800 Kongens Lyngby, Denmark
+    </p>
   </div>
 </footer>
 
